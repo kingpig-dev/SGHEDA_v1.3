@@ -1,6 +1,5 @@
 import json
 import sys
-import threading
 import time
 import webbrowser
 import traceback
@@ -10,18 +9,17 @@ import pyperclip
 # UI
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QTabWidget, \
-    QHBoxLayout, QComboBox, QFileDialog, QScrollArea, QMessageBox, QLineEdit, QFrame
-from PyQt5.QtGui import QIcon, QCursor, QMovie
-from PyQt5.QtCore import Qt, QSize, QTimer, QUrl
+    QHBoxLayout, QComboBox, QMessageBox
+from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtCore import Qt, QSize, QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from pyvistaqt import QtInteractor
 
 # Self define
 from buttonclass import ImageButton, ExtraButton, SquareButton, ExitButton, MainButton1, ImageButton1, TextButton
 from firstpageclass import FirstPageClass
-from inputformclass import InputForm, CustomQTextEdit, LicenseForm, PersonalForm, CustomRadioButtonGroup, \
-    Pipe_InputForm, DesignInputForm
-from labelclass import IntroLabel1, TickerLabel, IntroLabel3, IntroLabel2
+from inputformclass import InputForm, LicenseForm, PersonalForm
+from labelclass import IntroLabel1, TickerLabel
 from notificationclass import CustomMessageBox, ExitNotification
 import pyqtgraph as pg
 
@@ -465,7 +463,7 @@ class DesignClass(QWidget):
             self.shownotification(resource_path('./Images/warning.png'), 'Input all parameters.')
 
     def btnsetting(self):
-        self.right_widget.setCurrentIndex(8)
+        self.right_widget.setCurrentIndex(3)
 
     def shownotification(self, iconpath, message):
         icon = QIcon(iconpath)
