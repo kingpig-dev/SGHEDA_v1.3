@@ -5,6 +5,7 @@ import time
 import webbrowser
 import traceback
 import os
+import pyperclip
 
 # UI
 from PyQt5 import QtGui, QtCore
@@ -186,32 +187,12 @@ class DesignClass(QWidget):
         # Left Widget Buttons & Ticker
         self.btn_1 = SquareButton(self.left_widget, resource_path('./Images/configuration01_b.png'),
                                   resource_path('./Images/configuration01.png'))
-        self.btn_1.setText(' System Design ')
+        self.btn_1.setText(' Room Heat Load ')
         self.btn_1.setGeometry(0, 200, 212, 50)
         self.btn_2 = SquareButton(self.left_widget, resource_path('./Images/fluid02_b.png'),
                                   resource_path('./Images/fluid02.png'))
-        self.btn_2.setText(' Fluid Properties ')
+        self.btn_2.setText(' Earth Tube ')
         self.btn_2.setGeometry(0, 250, 212, 50)
-        self.btn_3 = SquareButton(self.left_widget, resource_path('./Images/soil01_b.png'),
-                                  resource_path('./Images/soil01.png'))
-        self.btn_3.setText(' Soil Properties ')
-        self.btn_3.setGeometry(0, 300, 212, 50)
-        self.btn_4 = SquareButton(self.left_widget, resource_path('./Images/pipe01_b.png'),
-                                  resource_path('./Images/pipe01.png'))
-        self.btn_4.setText(' Pipe Design')
-        self.btn_4.setGeometry(0, 350, 212, 50)
-        self.btn_5 = SquareButton(self.left_widget, resource_path('./Images/power02_b.png'),
-                                  resource_path('./Images/power02.png'))
-        self.btn_5.setText(' Pump Info ')
-        self.btn_5.setGeometry(0, 400, 212, 50)
-        self.btn_6 = SquareButton(self.left_widget, resource_path('./Images/result01_b.png'),
-                                  resource_path('./Images/result01.png'))
-        self.btn_6.setText(' Design Result')
-        self.btn_6.setGeometry(0, 450, 212, 50)
-        self.btn_7 = SquareButton(self.left_widget, resource_path('./Images/analysis11_b.png'),
-                                  resource_path('./Images/analysis11.png'))
-        self.btn_7.setText(' Analysis')
-        self.btn_7.setGeometry(0, 500, 212, 50)
 
         self.btn_1_ticker = TickerLabel(self.left_widget)
         self.btn_1_ticker.setGeometry(180, 210, 30, 30)
@@ -229,18 +210,6 @@ class DesignClass(QWidget):
         self.btn_4_ticker.setGeometry(180, 360, 30, 30)
         self.btn_4_ticker.hide()
 
-        self.btn_5_ticker = TickerLabel(self.left_widget)
-        self.btn_5_ticker.setGeometry(180, 410, 30, 30)
-        self.btn_5_ticker.hide()
-
-        self.btn_6_ticker = TickerLabel(self.left_widget)
-        self.btn_6_ticker.setGeometry(180, 460, 30, 30)
-        self.btn_6_ticker.hide()
-
-        self.btn_7_ticker = TickerLabel(self.left_widget)
-        self.btn_7_ticker.setGeometry(180, 510, 30, 30)
-        self.btn_7_ticker.hide()
-
         self.slide_label = QLabel(self.left_widget)
         self.slide_label.setStyleSheet('background-color: #31A8FC')
         self.slide_label.resize(5, 50)
@@ -248,11 +217,6 @@ class DesignClass(QWidget):
 
         self.btn_1.clicked.connect(self.button1)
         self.btn_2.clicked.connect(self.button2)
-        self.btn_3.clicked.connect(self.button3)
-        self.btn_4.clicked.connect(self.button4)
-        self.btn_5.clicked.connect(self.button5)
-        self.btn_6.clicked.connect(self.button6)
-        self.btn_7.clicked.connect(self.button7)
 
         # Extra buttons in left widget
         self.btn_setting = ExtraButton(self.left_widget, resource_path('./Images/setting_b.png'),
@@ -287,11 +251,6 @@ class DesignClass(QWidget):
         self.tab1 = self.ui1()
         self.tab2 = self.ui2()
         self.tab3 = self.ui3()
-        self.tab4 = self.ui4()
-        self.tab5 = self.ui5()
-        self.tab6 = self.ui6()
-        self.tab7 = self.ui7()
-        self.tab8 = self.ui8()
         self.tab9 = self.ui9()
 
         # right widget
@@ -301,11 +260,6 @@ class DesignClass(QWidget):
         self.right_widget.addTab(self.tab1, '')
         self.right_widget.addTab(self.tab2, '')
         self.right_widget.addTab(self.tab3, '')
-        self.right_widget.addTab(self.tab4, '')
-        self.right_widget.addTab(self.tab5, '')
-        self.right_widget.addTab(self.tab6, '')
-        self.right_widget.addTab(self.tab7, '')
-        self.right_widget.addTab(self.tab8, '')
         self.right_widget.addTab(self.tab9, '')
 
         # self.tab1.loadtable()
@@ -442,21 +396,11 @@ class DesignClass(QWidget):
         self.tab1 = self.ui1()
         self.tab2 = self.ui2()
         self.tab3 = self.ui3()
-        self.tab4 = self.ui4()
-        self.tab5 = self.ui5()
-        self.tab6 = self.ui6()
-        self.tab7 = self.ui7()
-        self.tab8 = self.ui8()
         self.tab9 = self.ui9()
 
         self.right_widget.addTab(self.tab1, '')
         self.right_widget.addTab(self.tab2, '')
         self.right_widget.addTab(self.tab3, '')
-        self.right_widget.addTab(self.tab4, '')
-        self.right_widget.addTab(self.tab5, '')
-        self.right_widget.addTab(self.tab6, '')
-        self.right_widget.addTab(self.tab7, '')
-        self.right_widget.addTab(self.tab8, '')
         self.right_widget.addTab(self.tab9, '')
 
         self.tab1.loadtable()
@@ -465,11 +409,6 @@ class DesignClass(QWidget):
         self.dict = {}
         self.btn_1_ticker.hide()
         self.btn_2_ticker.hide()
-        self.btn_3_ticker.hide()
-        self.btn_4_ticker.hide()
-        self.btn_5_ticker.hide()
-        self.btn_6_ticker.hide()
-        self.btn_7_ticker.hide()
 
     def button0notransition(self):
         print("button0notransition")
@@ -477,21 +416,11 @@ class DesignClass(QWidget):
         self.tab1 = self.ui1()
         self.tab2 = self.ui2()
         self.tab3 = self.ui3()
-        self.tab4 = self.ui4()
-        self.tab5 = self.ui5()
-        self.tab6 = self.ui6()
-        self.tab7 = self.ui7()
-        self.tab8 = self.ui8()
         self.tab9 = self.ui9()
 
         self.right_widget.addTab(self.tab1, '')
         self.right_widget.addTab(self.tab2, '')
         self.right_widget.addTab(self.tab3, '')
-        self.right_widget.addTab(self.tab4, '')
-        self.right_widget.addTab(self.tab5, '')
-        self.right_widget.addTab(self.tab6, '')
-        self.right_widget.addTab(self.tab7, '')
-        self.right_widget.addTab(self.tab8, '')
         self.right_widget.addTab(self.tab9, '')
 
         self.tab1.loadtable()
@@ -500,11 +429,6 @@ class DesignClass(QWidget):
         self.dict = {}
         self.btn_1_ticker.hide()
         self.btn_2_ticker.hide()
-        self.btn_3_ticker.hide()
-        self.btn_4_ticker.hide()
-        self.btn_5_ticker.hide()
-        self.btn_6_ticker.hide()
-        self.btn_7_ticker.hide()
 
     def button1(self):
         self.right_widget.setCurrentIndex(1)
@@ -575,50 +499,6 @@ class DesignClass(QWidget):
         main.loadtable()
         return main
 
-    # def ui2(self):
-    #     #         System
-    #     self.systemroomload = self.ui10()
-    #     self.systemearthtube = self.ui11()
-    #
-    #     main = QTabWidget()
-    #     main.addTab(self.systemroomload, "Room Load Calculator")
-    #     main.addTab(self.systemearthtube, "Earth Tube Calculator")
-    #
-    #     main.setStyleSheet("""
-    #         QTabWidget::pane {
-    #             background-color: #f2f2f2;
-    #             padding: 0px;
-    #         }
-    #         QTabBar::tab {
-    #             background-color: #2F3B55;
-    #             color: #ffffff;
-    #             font-size: 20px;
-    #             padding: 8px;
-    #             width: 470px;
-    #             height: 30px;
-    #             border-radius: 5px;
-    #         }
-    #         QTabBar::tab:selected {
-    #             background-color: #1F2843;
-    #         }
-    #
-    #         QTabBar::tab:hover {
-    #             text-decoration: underline;
-    #         }
-    #     """)
-    #     # main.setStyleSheet('''
-    #     #     QTabWidget::pane {
-    #     #         border: none;
-    #     #     }
-    #     #     QTabBar::tab {
-    #     #         margin: 0;
-    #     #         padding: 0;
-    #     #         border: none;
-    #     #     }
-    #     # ''')
-    #
-    #     return main
-
     def ui2(self):
         #       Room Load Calculator
         main = QWidget()
@@ -644,29 +524,34 @@ class DesignClass(QWidget):
         self.form_fluidproperties.move(257, 100)
 
         def calculateroomload():
-            print("calculate room load")
-            coefficient = {
-                "Concrete": {'External Wall': 0.23, 'Ground Floor':0.3, 'Roof':0.18, 'Window': 0.18},
-                "Hempcrete": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
-                "Brick": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
-                "Plastic": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18}
-            }
-            dict = self.form_fluidproperties.getData()
-            print('roomload', dict)
+            try:
+                print("calculate room load")
+                coefficient = {
+                    "Concrete": {'External Wall': 0.23, 'Ground Floor':0.3, 'Roof':0.18, 'Window': 0.18},
+                    "Hempcrete": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
+                    "Brick": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
+                    "Plastic": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18}
+                }
+                dict = self.form_fluidproperties.getData()
+                print('roomload', dict)
 
-            externalwall = float(dict['External Wall'])
-            groundfloor = float(dict['Ground Floor'])
-            roof = float(dict['Roof'])
-            window = float(dict['Window'])
+                externalwall = float(dict['External Wall'])
+                groundfloor = float(dict['Ground Floor'])
+                roof = float(dict['Roof'])
+                window = float(dict['Window'])
 
-            heatloadcoefficient = externalwall*coefficient[dict['Material']]['External Wall'] + groundfloor*coefficient[dict['Material']]['Ground Floor'] + roof*coefficient[dict['Material']]['Roof'] + window*coefficient[dict['Material']]['Window']
-            heatload = heatloadcoefficient * ( float(dict['Outer Temp']) - float(dict['Inner Temp']) )
-            print('heatload', heatload)
-            return heatload
+                heatloadcoefficient = externalwall*coefficient[dict['Material']]['External Wall'] + groundfloor*coefficient[dict['Material']]['Ground Floor'] + roof*coefficient[dict['Material']]['Roof'] + window*coefficient[dict['Material']]['Window']
+                heatload = heatloadcoefficient * ( float(dict['Outer Temp']) - float(dict['Inner Temp']) )
+                print('heatload', heatload)
+                self.shownotification(resource_path('./Images/success.png'), 'Result: ' + str(heatload) + ' !')
+                pyperclip.copy(str(heatload))
+                return heatload
+            except Exception as e:
+                self.shownotification(resource_path('./Images/error.png'), "Calculation Error!")
 
         btn_open = MainButton1(main)
-        btn_open.setText(main.tr('Calculate Room Load'))
-        btn_open.move(250, 470)
+        btn_open.setText(main.tr('Calculate and Copy'))
+        btn_open.move(310, 460)
         btn_open.resize(270, 55)
         btn_open.clicked.connect(calculateroomload)
         return main
@@ -677,7 +562,7 @@ class DesignClass(QWidget):
 
         label = IntroLabel1(main)
         label.setText(" Earth Tube Calculator ")
-        label.move(340, 30)
+        label.move(320, 30)
 
         self.data_form_soilthermalproperties = ["Earth Tube",
                                                 ["Head Load", "W", "lineedit", "600"],
@@ -692,559 +577,11 @@ class DesignClass(QWidget):
         self.form_soilthermalproperties.move(232, 100)
 
         btn_open = MainButton1(main)
-        btn_open.setText(main.tr('Calculate Room Load'))
-        btn_open.move(225, 470)
+        btn_open.setText(main.tr('Calculate Earth tube'))
+        btn_open.move(310, 470)
         btn_open.resize(300, 55)
         btn_open.clicked.connect(self.result)
         return main
-
-    # def ui3(self):
-    #     #       Fluid
-    #     main = QWidget()
-    #
-    #     label = IntroLabel1(main)
-    #     label.setText("Fluid")
-    #     label.move(440, 30)
-    #
-    #     self.data_form_fluidproperties = ["Fuild Properties",
-    #                                       ["Fluid Type",
-    #                                        ["Water", "Methanol", "Ethylene Glycol", "Propylene Glycol",
-    #                                         "Sodium Chloride",
-    #                                         "Calcium Chloride"], "combobox"],
-    #                                       ["Viscosity", "Pa*s", "lineedit", "0.001"],
-    #                                       ["Specific Heat", "J/(Kg*⁰C)", "lineedit", "4162"],
-    #                                       ["Density", "Kg/m^3", "lineedit", "1001"]
-    #                                       ]
-    #     self.form_fluidproperties = InputForm(main, self.data_form_fluidproperties, self)
-    #     self.form_fluidproperties.move(257, 100)
-    #
-    #     web_view = QWebEngineView(main)
-    #     file_path = self.currentpath + "\HTML\FluidTable.html"
-    #     web_view.load(QUrl.fromLocalFile(file_path))
-    #     web_view.setAttribute(Qt.WA_StyledBackground)
-    #     web_view.setStyleSheet("""
-    #         QWebEngineView {
-    #             border: 1px solid white;
-    #             border-radius: 50px;
-    #             padding: 50px;
-    #         }
-    #
-    #         QScrollBar:vertical {
-    #             background-color: #F5F5F5;
-    #             width: 20px;
-    #             margin: 0px;
-    #         }
-    #
-    #         QScrollBar::handle:vertical {
-    #             background-color: #CCCCCC;
-    #             min-height: 20px;
-    #         }
-    #
-    #         QScrollBar::add-line:vertical,
-    #         QScrollBar::sub-line:vertical {
-    #             background: none;
-    #         }
-    #     """)
-    #     web_view.setContentsMargins(30, 20, 30, 20)
-    #     web_view.setGeometry(100, 350, 800, 300)
-    #
-    #     def uimovenext():
-    #         print("uimovenext")
-    #         dict = {}
-    #         if self.form_fluidproperties.getValidation():
-    #             dict = self.form_fluidproperties.getData()
-    #         else:
-    #             self.btn_2_ticker.hide()
-    #             self.movenext()
-    #             return False
-    #
-    #         self.dict["Fluid"] = dict
-    #         self.btn_2_ticker.show()
-    #         self.movenext()
-    #         return True
-    #
-    #     def uimoveprevious():
-    #         self.moveprevious()
-    #
-    #     btn_open = MainButton1(main)
-    #     btn_open.setText(main.tr('Previous Step'))
-    #     btn_open.move(225, 670)
-    #     btn_open.resize(170, 55)
-    #     btn_open.clicked.connect(uimoveprevious)
-    #
-    #     btn_next = MainButton1(main)
-    #     btn_next.setText(main.tr('Next Step'))
-    #     btn_next.move(575, 670)
-    #     btn_next.resize(170, 55)
-    #     btn_next.clicked.connect(uimovenext)
-    #     return main
-
-    def ui4(self):
-        # Soil
-        main = QWidget()
-
-        label = IntroLabel1(main)
-        label.setText(" Soil ")
-        label.move(440, 30)
-
-        self.data_form_soilthermalproperties = ["Soil Thermal Properties",
-                                                ["Thermal Conductivity", "W/(m*K)", "lineedit", "2.07"],
-                                                ["Thermal Diffusivity", "m^2/h", 'lineedit', "0.0000001"],
-                                                ["Ground Temperature", "⁰C", "lineedit", '20']
-                                                ]
-        self.form_soilthermalproperties = InputForm(main, self.data_form_soilthermalproperties, self)
-        self.form_soilthermalproperties.move(232, 100)
-
-        web_view = QWebEngineView(main)
-        file_path = self.currentpath + "\HTML\SoilTable.html"
-        web_view.load(QUrl.fromLocalFile(file_path))
-        web_view.setAttribute(Qt.WA_StyledBackground)
-        web_view.setStyleSheet("""
-                    QWebEngineView { 
-                        border: 1px solid white;
-                        border-radius: 50px;
-                        padding: 50px;
-                    }
-                """)
-        web_view.setContentsMargins(30, 20, 30, 20)
-        web_view.setGeometry(100, 300, 800, 350)
-
-        def uimovenext():
-            print("uimovenext")
-            dict = {}
-            if self.form_soilthermalproperties.getValidation():
-                dict = self.form_soilthermalproperties.getData()
-            else:
-                self.btn_3_ticker.hide()
-                self.movenext()
-                return False
-
-            self.dict["Soil"] = dict
-            self.btn_3_ticker.show()
-            self.movenext()
-            return True
-
-        def uimoveprevious():
-            self.moveprevious()
-
-        btn_open = MainButton1(main)
-        btn_open.setText(main.tr('Previous Step'))
-        btn_open.move(225, 670)
-        btn_open.resize(170, 55)
-        btn_open.clicked.connect(uimoveprevious)
-
-        btn_next = MainButton1(main)
-        btn_next.setText(main.tr('Next Step'))
-        btn_next.move(575, 670)
-        btn_next.resize(170, 55)
-        btn_next.clicked.connect(uimovenext)
-
-        return main
-
-    def ui5(self):
-        # Pipe
-        main = QWidget()
-
-        label = IntroLabel1(main)
-        label.setText(" Pipe")
-        label.move(440, 30)
-
-        # self.data_form_pipeproperties = ["Pipe Properties",
-        #                                  ["Pipe Size",
-        #                                   ["3/4 in. (21mm)", "1 in. (25mm)", "1 1/4 in. (32mm)", "1 1/2 in. (40mm)"],
-        #                                   "combobox"],
-        #                                  ["Outer Diameter", "m", "lineedit", '0.021'],
-        #                                  ["Inner Diameter", "m", "lineedit", '0.026'],
-        #                                  ["Pipe Conductivity", "W/(m*K)", "lineedit", '0.14']
-        #                                  ]
-        self.data_form_pipeproperties = ["Pipe Properties",
-                                         ["Outer Diameter", "m", "lineedit", '0.026'],
-                                         ["Inner Diameter", "m", "lineedit", '0.021'],
-                                         ["Pipe Conductivity", "W/(m*K)", "lineedit", '0.14'],
-                                         ['Buried Depth', 'm', 'lineedit', '2.0']
-                                         ]
-        self.form_pipeproperties = InputForm(main, self.data_form_pipeproperties, self)
-        self.form_pipeproperties.move(257, 100)
-
-        # self.data_form_pipeconfiguration = ["Pipe Configuration",
-        #                                     ["Pipe Conductivity", "W/(m*K)", "lineedit", '0.14']]
-        # self.form_pipeconfiguration = InputForm(main, self.data_form_pipeconfiguration)
-        # self.form_pipeconfiguration.move(287, 450)
-
-        inner_diameter = 0.021
-        outer_diameter = 0.026
-        height = outer_diameter * 4
-
-        # Create the outer cylinder
-        outer_cylinder = pv.Cylinder(radius=outer_diameter / 2, height=height, resolution=128).triangulate()
-
-        # Create the inner cylinder
-        inner_cylinder = pv.Cylinder(radius=inner_diameter / 2, height=height+0.2, resolution=128).triangulate()
-
-        # Create the tube by subtracting the inner cylinder from the outer cylinder
-        tube = outer_cylinder - inner_cylinder
-
-        self.pipeshowframe = QFrame(main)
-        self.pipeshowframe.setStyleSheet("""
-             QFrame {
-             border: 1px solid white;
-             border-radius: 30%;
-             }
-        """)
-        self.pipeshowframe.setGeometry(100, 350, 800, 300)
-
-        self.plotter = QtInteractor(self.pipeshowframe)
-        self.plotter.camera_position = [(0.15, -0.15, 0.15), (0, 0, 0), (0, 0, 0.15)]
-        self.plotter.background_color = "#1F2843"
-        self.plotter.add_mesh(tube, color='blue')
-        self.plotter.setGeometry(50, 30, 700, 230)
-        self.plotter.show()
-
-        iconpath = self.currentpath + "/Images/refresh.png"
-        refresh_button = QPushButton(self.pipeshowframe)
-        refresh_button.setIcon(QIcon(iconpath))
-        refresh_button.setToolTip('refresh')
-        refresh_button.setIconSize(QSize(25, 25))
-        refresh_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        refresh_button.clicked.connect(self.update_pipe)
-        refresh_button.setGeometry(0, 0, 25, 25)
-
-        def uimovenext():
-            print("uimovenext")
-            dict = {}
-            if self.form_pipeproperties.getValidation():
-                dict = self.form_pipeproperties.getData()
-            else:
-                self.btn_4_ticker.hide()
-                self.movenext()
-                return False
-
-            self.dict["Pipe"] = dict
-            self.btn_4_ticker.show()
-            self.movenext()
-            return True
-
-        def uimoveprevious():
-            self.moveprevious()
-
-        btn_open = MainButton1(main)
-        btn_open.setText(main.tr('Previous Step'))
-        btn_open.move(225, 670)
-        btn_open.resize(170, 55)
-        btn_open.clicked.connect(uimoveprevious)
-
-        btn_next = MainButton1(main)
-        btn_next.setText(main.tr('Next Step'))
-        btn_next.move(575, 670)
-        btn_next.resize(170, 55)
-        btn_next.clicked.connect(uimovenext)
-
-        return main
-
-    def ui6(self):
-        # Pump
-        main = QWidget()
-
-        label = IntroLabel1(main)
-        label.setText("  Pump")
-        label.move(440, 30)
-
-        self.data_form_circulationpumps = ["Circulation Pump",
-                                           ["Required Power", 'W', "lineedit", '600'],
-                                           ["Fluid Velocity", "m/s", 'lineedit', '1.5'],
-                                           ['Pump Motor Efficiency', '%', 'lineedit', '85']
-                                           ]
-        self.form_circulationpumps = InputForm(main, self.data_form_circulationpumps, self)
-        self.form_circulationpumps.move(267, 100)
-
-        web_view = QWebEngineView(main)
-        file_path = self.currentpath + "\HTML\PumpTable.html"
-        web_view.load(QUrl.fromLocalFile(file_path))
-        web_view.setAttribute(Qt.WA_StyledBackground)
-        web_view.setStyleSheet("""
-                            QWebEngineView { 
-                                border: 1px solid white;
-                                border-radius: 50px;
-                                padding: 50px;
-                            }
-                        """)
-        web_view.setContentsMargins(30, 20, 30, 20)
-        web_view.setGeometry(100, 300, 800, 350)
-
-        def end_loading():
-
-            self.left_widget.setEnabled(True)
-            loading_label.setVisible(False)
-            btn_loading_stop.setVisible(False)
-            movie.stop()
-            timer.stop()
-            self.result()
-
-        # timer object
-        timer = QTimer()
-        timer.timeout.connect(end_loading)
-
-        def uimoveprevious():
-            self.moveprevious()
-
-        def start_loading():
-            print("Design")
-            if self.num_design == '∞' or self.num_design > 0:
-                dict = {}
-                if self.form_circulationpumps.getValidation():
-                    dict = self.form_circulationpumps.getData()
-                else:
-                    self.shownotification(resource_path('./Images/warning.png'), "Input all parameters.")
-                    return False
-                self.dict["Pump"] = dict
-                self.btn_5_ticker.show()
-
-                if len(self.dict.keys()) < 5:
-                    print('Design1', len(self.dict.keys()))
-                    self.shownotification(resource_path('./Images/warning.png'), "Input all parameters.")
-                    return False
-
-                loading_label.setVisible(True)
-                self.left_widget.setEnabled(False)
-                btn_loading_stop.setVisible(True)
-                movie.start()
-                timer.start(2000)
-            else:
-                self.shownotification(resource_path('./Images/error.png'), "Get license!")
-
-        def loading_stop():
-            self.left_widget.setEnabled(True)
-            loading_label.setVisible(False)
-            btn_loading_stop.setVisible(False)
-            movie.stop()
-            timer.stop()
-
-        btn_open = MainButton1(main)
-        btn_open.setText(main.tr('Previous Step'))
-        btn_open.move(225, 670)
-        btn_open.resize(170, 55)
-        btn_open.clicked.connect(uimoveprevious)
-
-        btn_next = MainButton1(main)
-        btn_next.setText(main.tr('Design'))
-        btn_next.move(575, 670)
-        btn_next.resize(170, 55)
-        btn_next.clicked.connect(start_loading)
-
-        movie = QMovie(resource_path('./Images/loading.gif'))
-        loading_label = QLabel(main)
-        loading_label.setAlignment(Qt.AlignCenter)
-        loading_label.setFixedSize(950, 730)
-        loading_label.setVisible(False)
-        loading_label.setMovie(movie)
-        loading_label.move(20, 0)
-
-        btn_loading_stop = ImageButton1(main, resource_path('./Images/x02.png'))
-        btn_loading_stop.setToolTip('Cancel Calculation')
-        btn_loading_stop.move(900, 30)
-        btn_loading_stop.clicked.connect(loading_stop)
-        btn_loading_stop.setVisible(False)
-
-        return main
-
-    def ui7(self):
-        # Result
-        main = QWidget()
-
-        label = IntroLabel1(main)
-        label.setText(" Result")
-        label.move(440, 30)
-
-        main.setStyleSheet('''
-            * {
-                color: white;
-            }
-            QLineEdit {
-                border: 1px solid #767A7D;
-            }
-            
-            QCombobox {
-                border: 1px solid #767A7D;
-            }
-        ''')
-
-        self.data_form_designdimensions = ["Design Dimensions",
-                                           ["Ring Diameter", 'm', "lineedit", '0.75'],
-                                           ["Pitch", 'm', "lineedit", '0.4'],
-                                           ["Number of Ring", '', 'lineedit', '8'],
-                                           ["Pipe Length", 'm', "lineedit", '25.6'],
-                                           ['Inlet Temperature', '⁰C', 'lineedit', '40'],
-                                           ['Diff Temperature', '⁰C', 'lineedit', '3'],
-                                           ['System Flow Rate', 'm/s', 'lineedit', '1.5']
-                                           ]
-        self.form_designdimensions = DesignInputForm(main, self.data_form_designdimensions, self)
-        self.form_designdimensions.move(277, 100)
-
-        label_description = IntroLabel3(main)
-        label_description.setText('Description')
-        label_description.setAlignment(Qt.AlignCenter)
-        label_description.move(440, 450)
-
-        self.textedit_description = CustomQTextEdit(main)
-        self.textedit_description.setPlaceholderText('Design GHE for blockchain mining equipment')
-        self.textedit_description.setGeometry(150, 485, 700, 150)
-
-        def uisavedesign():
-            if self.textedit_description.toPlainText() == "":
-                self.textedit_description.setText('Design GHE for blockchain mining equipment')
-            description = self.textedit_description.toPlainText()
-            self.dict["Description"] = description
-
-            if len(self.dict.keys()) >= 7:
-                options = QFileDialog.Options()
-                options |= QFileDialog.DontUseNativeDialog
-
-                file_path, _ = QFileDialog.getSaveFileName(main, "Save File", "", "Text Files *.gld;;",
-                                                           options=options)
-
-                print(file_path)
-                if file_path:
-                    temp_file_path = file_path.split('/')[-1].split('.')
-                    if len(temp_file_path) == 1:
-                        file_path = file_path + '.gld'
-                    with open(file_path, 'w') as file:
-                        file.write(json.dumps(self.dict))
-                    with open(self.designpath, 'r') as tablefile:
-                        try:
-                            tablecontent = json.load(tablefile)
-                        except Exception as e:
-                            tablecontent = {}
-                            print("Design file is empty!")
-                    with open(self.designpath, 'w') as savefile:
-                        tablecontent[file_path] = description
-                        savefile.write(json.dumps(tablecontent))
-                return True
-            else:
-                self.shownotification(resource_path('./Images/warning.png'), "Input all parameters.")
-                return False
-
-        def gotoanalysis():
-            self.analysis_calculation_result = True
-            if self.analysis():
-                end_loading()
-                self.right_widget.setCurrentIndex(7)
-                self.tickerbutton()
-                self.btn_7_ticker.show()
-                return True
-            else:
-                return False
-
-        def end_loading():
-            self.analysis_calculation_process = False
-            self.left_widget.setEnabled(True)
-            loading_label.setVisible(False)
-            btn_loading_stop.setVisible(False)
-            movie.stop()
-            self.right_widget.setCurrentIndex(6)
-
-        def start_loading():
-            print("start loading")
-            self.analysis_calculation_process = True
-            loading_label.setVisible(True)
-            self.left_widget.setEnabled(False)
-            btn_loading_stop.setVisible(True)
-            movie.start()
-            self.tickerbutton()
-
-        def start_analysis():
-            if self.num_analysis == '∞' or self.num_analysis > 0:
-                if self.textedit_description.toPlainText() == "":
-                    self.textedit_description.setText('Design GHE for blockchain mining equipment')
-                description = self.textedit_description.toPlainText()
-                self.dict["Description"] = description
-                if len(self.dict.keys()) == 7 or len(self.dict.keys()) == 8:
-                    start_loading()
-                    thread = threading.Thread(target=gotoanalysis)
-                    thread.start()
-
-                    # database update
-                    if self.num_analysis == "∞":
-                        print('full license access')
-                    else:
-                        self.num_analysis -= 1
-                        self.database_set_data()
-                        self.combobox_selection_changed()
-
-                else:
-                    print(self.dict)
-                    self.shownotification(resource_path('./Images/warning.png'), 'Input all parameters.')
-            else:
-                self.shownotification(resource_path('./Images/error.png'), 'Get license!')
-
-        btn_save = MainButton1(main)
-        btn_save.setText(main.tr('Save design'))
-        btn_save.move(150, 670)
-        btn_save.resize(170, 55)
-        btn_save.clicked.connect(uisavedesign)
-
-        btn_redesign = MainButton1(main)
-        btn_redesign.setText(main.tr('Redesign'))
-        btn_redesign.move(412, 670)
-        btn_redesign.resize(170, 55)
-        btn_redesign.clicked.connect(self.button0)
-
-        btn_gotoanalysis = MainButton1(main)
-        btn_gotoanalysis.setText(main.tr('Go to Analysis'))
-        btn_gotoanalysis.move(675, 670)
-        btn_gotoanalysis.resize(170, 55)
-        btn_gotoanalysis.clicked.connect(start_analysis)
-
-        movie = QMovie(resource_path('./Images/loading.gif'))
-        loading_label = QLabel(main)
-        loading_label.setAlignment(Qt.AlignCenter)
-        loading_label.setFixedSize(730, 730)
-        loading_label.setVisible(False)
-        loading_label.setMovie(movie)
-        loading_label.move(120, 0)
-
-        btn_loading_stop = ImageButton1(main, resource_path('./Images/x02.png'))
-        btn_loading_stop.setToolTip('Cancel Calculation')
-        btn_loading_stop.move(900, 30)
-        btn_loading_stop.clicked.connect(end_loading)
-        btn_loading_stop.setVisible(False)
-
-        return main
-
-    def ui8(self):
-        # Analysis
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        # scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-
-        label = IntroLabel1(scroll_area)
-        label.setText("Analysis")
-        label.move(440, 30)
-
-        self.analysis_elapsed_time = IntroLabel2(scroll_area)
-        self.analysis_elapsed_time.setText("Elapsed time: ")
-        self.analysis_elapsed_time.move(650, 40)
-
-        self.plt_gfunction = pg.PlotWidget(scroll_area)
-        self.plt_gfunction.setTitle("G-function")
-        self.plt_gfunction.setLabel('left', 'g-function')
-        self.plt_gfunction.setLabel('bottom', 'Time(day)')
-        self.plt_gfunction.setBackground('#2C3751')
-        self.plt_gfunction.setGeometry(150, 80, 700, 290)
-
-        self.plt_temperaturepertubation = pg.PlotWidget(scroll_area)
-        self.plt_temperaturepertubation.setTitle('Temperature Pertubation')
-        self.plt_temperaturepertubation.setLabel('left', 'degree')
-        self.plt_temperaturepertubation.setLabel('bottom', 'Time(day)')
-        self.plt_temperaturepertubation.setBackground('#2C3751')
-        self.plt_temperaturepertubation.setGeometry(150, 380, 700, 290)
-
-        btn_redesign = MainButton1(scroll_area)
-        btn_redesign.setText('Redesign')
-        btn_redesign.move(410, 690)
-        btn_redesign.resize(170, 55)
-        btn_redesign.clicked.connect(self.button0)
-
-        return scroll_area
 
     def ui9(self):
         # Settings
