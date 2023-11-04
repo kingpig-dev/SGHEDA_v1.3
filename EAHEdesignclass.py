@@ -50,6 +50,8 @@ class DesignClass(QWidget):
         super().__init__()
 
         ############ System Property ##############
+        self.data_form_earthtubedesign = None
+        self.form_earthtubedesign = None
         self.systemearthtube = None
         self.systemroomload = None
         self.value_automate_upgrade = None
@@ -118,6 +120,8 @@ class DesignClass(QWidget):
         self.btn_home = ImageButton(self.left_widget, resource_path('./Images/logo03_glowed_white.png'))
         self.btn_home.move(20, 20)
         self.btn_home.clicked.connect(self.button0)
+
+        self.pipeconductivitytuple = {"Clay": 1, "PEX": 0.14, "Steel": 25, "PVC": 0.41}
 
         # Remaining Number
         self.combobox_selection = QComboBox(self.left_widget)
@@ -436,22 +440,6 @@ class DesignClass(QWidget):
         self.right_widget.setCurrentIndex(2)
         self.tickerbutton()
 
-    def button3(self):
-        self.right_widget.setCurrentIndex(3)
-        self.tickerbutton()
-
-    def button4(self):
-        self.right_widget.setCurrentIndex(4)
-        self.tickerbutton()
-
-    def button5(self):
-        self.right_widget.setCurrentIndex(5)
-        self.tickerbutton()
-
-    def button6(self):
-        self.right_widget.setCurrentIndex(6)
-        self.tickerbutton()
-
     def button7(self):
         # self.right_widget.setCurrentIndex(7)
         if len(self.dict.keys()) == 8:
@@ -562,23 +550,30 @@ class DesignClass(QWidget):
         label.setText(" Earth Tube Calculator ")
         label.move(320, 30)
 
-        self.data_form_soilthermalproperties = ["Earth Tube",
-                                                ["Head Load", "W", "lineedit", "600"],
-                                                ["Ground Temp", "m^2/h", 'lineedit', "0.0000001"],
-                                                ["Pipe Inner diameter", "m", "lineedit", '0.2'],
-                                                ["Pipe Outer diameter", "m", "lineedit", '0.19'],
-                                                ["Pipe Material", "⁰C", "lineedit", '20'],
+        self.data_form_earthtubedesign = ["Earth Tube",
+                                                ["Heat Load", "W", "lineedit", "600"],
+                                                ["Ground Temp", "⁰C", 'lineedit', "15"],
+                                                ["Input Air Temp", "⁰C", 'lineedit', '38'],
+                                                ["Output Air Temp", "⁰C", 'lineedit', '18'],
+                                                ["Pipe Inner Diameter", "m", "lineedit", '0.2'],
+                                                ["Pipe Outer Diameter", "m", "lineedit", '0.19'],
+                                                ["Pipe Material", ["Clay", "PEX", "PVC", "Steel"], "combobox"],
                                                 ["Buried Depth", "m", "lineedit", '2'],
-                                                ["Fan Velocity", "m/s", "lineedit", '1.5'],
+                                                ["Fan Velocity", "m/s", "lineedit", '1.5']
                                                 ]
-        self.form_soilthermalproperties = InputForm(main, self.data_form_soilthermalproperties, self)
-        self.form_soilthermalproperties.move(232, 100)
+        self.form_earthtubedesign = InputForm(main, self.data_form_earthtubedesign, self)
+        self.form_earthtubedesign.move(232, 100)
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate Earth tube'))
-        btn_open.move(310, 470)
+        btn_open.move(310, 530)
         btn_open.resize(300, 55)
-        btn_open.clicked.connect(self.result)
+
+        def calculateearthtube():
+            self.dict['System'] = self.form_earthtubedesign.getData()
+            self.result()
+
+        btn_open.clicked.connect(calculateearthtube)
         return main
 
     def ui9(self):
@@ -749,28 +744,27 @@ class DesignClass(QWidget):
         # System
         try:
             E_heat = float(self.dict['System']['Heat Load'])  # heat load [W]
-            T_in = float(self.dict['System']['Input Fluid Temperature'])  # Hot Fluid Temperature 60~65⁰C, 140~150⁰F
+            T_in = float(self.dict['System']['Input Air Temp'])  # Hot Fluid Temperature 60~65⁰C, 140~150⁰F
 
-            # Fluid
-            mu = float(self.dict["Fluid"]["Viscosity"])
-            c_p = float(self.dict["Fluid"]["Specific Heat"])
-            rho = float(self.dict["Fluid"]["Density"])
+            # Air
+            mu = 0.000018
+            c_p = 718
+            rho = 1.225
 
             # Soil
-            k_soil = float(self.dict["Soil"]["Thermal Conductivity"])
-            T_g = float(self.dict["Soil"]["Ground Temperature"])
+            k_soil = 2.07
+            T_g = float(self.dict['System']["Ground Temp"])
 
             # print(E_heat, T_in, mu, c_p, rho, k_soil, T_g)
 
             # Pipe
-            D_i = float(self.dict['Pipe']['Inner Diameter'])
-            D_o = float(self.dict['Pipe']['Outer Diameter'])
-            k_pipe = float(self.dict['Pipe']['Pipe Conductivity'])
-            d = float(self.dict['Pipe']['Buried Depth'])
+            D_i = float(self.dict['System']['Pipe Inner Diameter'])
+            D_o = float(self.dict['System']['Pipe Outer Diameter'])
+            k_pipe = self.pipeconductivitytuple[self.dict['System']['Pipe Material']]
+            d = float(self.dict['System']['Buried Depth'])
 
             # Pump
-            V = float(self.dict["Pump"]["Fluid Velocity"])  # modify
-            p = float(self.dict['Pump']['Required Power'])
+            V = float(self.dict['System']["Fan Velocity"])  # modify
 
         except Exception as e:
             print('Exception: ', traceback.format_exc())
@@ -800,22 +794,9 @@ class DesignClass(QWidget):
 
             print(m_w, c_p, R_total, theta_w_in, theta_w_out)
             L = (m_w * c_p * R_total) * math.log(theta_w_in / theta_w_out)
-            L = L * 1.8
             print("length of pipe:", L)
-            ring_diameter = 0.75 * T_in / T_out
-            pitch = 0.4 * T_in / T_out
-
-            if self.dict['System']['type'] == 1:
-                L = L * 0.95
-            elif self.dict['System']['type'] == 2:
-                L = L * 0.75
-                ring_diameter = ring_diameter * 0.9
-                pitch = ring_diameter * 0.92
 
             dict = {}
-            dict['Ring Diameter'] = str(ring_diameter)
-            dict['Pitch'] = str(pitch)
-            dict['Number of Ring'] = str(L / (3.14 * ring_diameter + pitch))
             dict['Pipe Length'] = str(L + 2 * d)
             dict['Inlet Temperature'] = str(T_in)
             dict['Outlet Temperature'] = str(delta_T)
@@ -836,11 +817,7 @@ class DesignClass(QWidget):
 
     def result(self):
         if self.sizing():
-            self.form_designdimensions.setData1(list(self.dict["Results"].values()))
-            self.form_designdimensions.setReadOnly(True)
-            self.right_widget.setCurrentIndex(6)
             self.tickerbutton()
-            self.btn_6_ticker.show()
         else:
             self.tickerbutton()
             print('Show Notification')
