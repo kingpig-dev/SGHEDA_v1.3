@@ -4,3 +4,7 @@ Except for the upper few meters, the ground temperature is known to be relativel
 A heat pump using th eground as a source or sink is called a Ground Source Heat Pump (GSHP).
 
 Our project aims to develop cost-effective enhanced geothermal systems for energy efficient building retrofitting.
+
+--------------------- addition part from v_1.2
+
+Add room load and earth tube design function,
