@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --onefile --windowed --icon="D:/Heat Exchanger/Project/SGHEDA_v1.0 - Copy/logo.ico" --add-data "D:/Heat Exchanger/Project/SGHEDA_v1.0 - Copy/Images;Images/"  "D:/Heat Exchanger/Project/SGHEDA_v1.0 - Copy/SGHEDA.py"
