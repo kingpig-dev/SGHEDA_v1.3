@@ -488,7 +488,7 @@ class EAHEDesignClass(QWidget):
 
         label = IntroLabel1(main)
         label.setText("Room Load Calculator")
-        label.move(320, 30)
+        label.move(320, 130)
 
         self.data_form_fluidproperties = ["Room Load",
                                           ["Material",
@@ -504,7 +504,7 @@ class EAHEDesignClass(QWidget):
                                           ["Outer Temp", "⁰C", "lineedit", "38"],
                                           ]
         self.form_fluidproperties = InputForm(main, self.data_form_fluidproperties, self)
-        self.form_fluidproperties.move(257, 100)
+        self.form_fluidproperties.move(257, 200)
 
         def calculateroomload():
             if self.num_design > 0:
@@ -538,7 +538,7 @@ class EAHEDesignClass(QWidget):
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate and Copy'))
-        btn_open.move(310, 460)
+        btn_open.move(310, 560)
         btn_open.resize(270, 55)
         btn_open.clicked.connect(calculateroomload)
         return main
@@ -585,7 +585,7 @@ class EAHEDesignClass(QWidget):
 
         label = IntroLabel1(main)
         label.setText(" Earth Tube Calculator ")
-        label.move(320, 30)
+        label.move(320, 60)
 
         self.data_form_closedearthtubedesign = ["Earth Tube",
                                                 ["Heat Load", "W", "lineedit", "200"],
@@ -598,11 +598,11 @@ class EAHEDesignClass(QWidget):
                                                 ["Fan Velocity", "m/s", "lineedit", '1.5']
                                                 ]
         self.form_closedearthtubedesign = InputForm(main, self.data_form_closedearthtubedesign, self)
-        self.form_closedearthtubedesign.move(242, 100)
+        self.form_closedearthtubedesign.move(242, 130)
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate Earth tube'))
-        btn_open.move(320, 530)
+        btn_open.move(320, 560)
         btn_open.resize(300, 55)
 
         def calculateearthtube():
@@ -619,7 +619,7 @@ class EAHEDesignClass(QWidget):
 
         label = IntroLabel1(main)
         label.setText(" Earth Tube Calculator ")
-        label.move(320, 30)
+        label.move(320, 60)
 
         self.data_form_openearthtubedesign = ["Earth Tube",
                                                 ["Heat Load", "W", "lineedit", "200"],
@@ -633,11 +633,11 @@ class EAHEDesignClass(QWidget):
                                                 ["Fan Velocity", "m/s", "lineedit", '1.5']
                                                 ]
         self.form_openearthtubedesign = InputForm(main, self.data_form_openearthtubedesign, self)
-        self.form_openearthtubedesign.move(242, 100)
+        self.form_openearthtubedesign.move(242, 130)
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate Earth tube'))
-        btn_open.move(320, 530)
+        btn_open.move(320, 560)
         btn_open.resize(300, 55)
 
         def calculateearthtube():
@@ -876,6 +876,8 @@ class EAHEDesignClass(QWidget):
                 self.num_design -= 1
                 self.database_set_data()
                 self.combobox_selection_changed()
+
+            self.shownotification(resource_path('./Images/success.png'), 'Result: ' + str(L) + ' !')
             return True
         except Exception as e:
             print('Size Calculation Error:', traceback.format_exc())
@@ -964,6 +966,7 @@ class EAHEDesignClass(QWidget):
                 self.num_design -= 1
                 self.database_set_data()
                 self.combobox_selection_changed()
+            self.shownotification(resource_path('./Images/success.png'), 'Result: ' + str(L) + ' !')
             return True
         except Exception as e:
             print('Size Calculation Error:', traceback.format_exc())
