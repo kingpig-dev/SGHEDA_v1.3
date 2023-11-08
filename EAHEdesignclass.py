@@ -506,30 +506,34 @@ class DesignClass(QWidget):
         self.form_fluidproperties.move(257, 100)
 
         def calculateroomload():
-            try:
-                print("calculate room load")
-                coefficient = {
-                    "Concrete": {'External Wall': 0.23, 'Ground Floor':0.3, 'Roof':0.18, 'Window': 0.18},
-                    "Hempcrete": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
-                    "Brick": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
-                    "Plastic": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18}
-                }
-                dict = self.form_fluidproperties.getData()
-                print('roomload', dict)
+            if self.num_design > 0:
+                try:
+                    print("calculate room load")
+                    coefficient = {
+                        "Concrete": {'External Wall': 0.23, 'Ground Floor':0.3, 'Roof':0.18, 'Window': 0.18},
+                        "Hempcrete": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
+                        "Brick": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18},
+                        "Plastic": {'External Wall': 0.23, 'Ground Floor': 0.3, 'Roof': 0.18, 'Window': 0.18}
+                    }
+                    dict = self.form_fluidproperties.getData()
+                    print('roomload', dict)
 
-                externalwall = float(dict['External Wall'])
-                groundfloor = float(dict['Ground Floor'])
-                roof = float(dict['Roof'])
-                window = float(dict['Window'])
+                    externalwall = float(dict['External Wall'])
+                    groundfloor = float(dict['Ground Floor'])
+                    roof = float(dict['Roof'])
+                    window = float(dict['Window'])
 
-                heatloadcoefficient = externalwall*coefficient[dict['Material']]['External Wall'] + groundfloor*coefficient[dict['Material']]['Ground Floor'] + roof*coefficient[dict['Material']]['Roof'] + window*coefficient[dict['Material']]['Window']
-                heatload = heatloadcoefficient * ( float(dict['Outer Temp']) - float(dict['Inner Temp']) )
-                print('heatload', heatload)
-                self.shownotification(resource_path('./Images/success.png'), 'Result: ' + str(heatload) + ' !')
-                pyperclip.copy(str(heatload))
-                return heatload
-            except Exception as e:
-                self.shownotification(resource_path('./Images/error.png'), "Calculation Error!")
+                    heatloadcoefficient = externalwall*coefficient[dict['Material']]['External Wall'] + groundfloor*coefficient[dict['Material']]['Ground Floor'] + roof*coefficient[dict['Material']]['Roof'] + window*coefficient[dict['Material']]['Window']
+                    heatload = heatloadcoefficient * ( float(dict['Outer Temp']) - float(dict['Inner Temp']) )
+                    print('heatload', heatload)
+                    self.shownotification(resource_path('./Images/success.png'), 'Result: ' + str(heatload) + ' !')
+                    pyperclip.copy(str(heatload))
+                    self.num_design = self.num_design - 1
+                    return heatload
+                except Exception as e:
+                    self.shownotification(resource_path('./Images/error.png'), "Calculation Error!")
+            else:
+                self.shownotification(resource_path('./Images/error.png'), "Get license!")
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate and Copy'))
@@ -878,11 +882,10 @@ class DesignClass(QWidget):
             return False
 
     def closedresult(self):
-        if self.closedsizing():
-            self.tickerbutton()
+        if self.num_analysis > 0:
+            self.closedsizing()
         else:
-            self.tickerbutton()
-            print('Show Notification')
+            self.shownotification(resource_path('./Images/error.png'), "Get license!")
 
     def opensizing(self):
         # System
@@ -967,11 +970,10 @@ class DesignClass(QWidget):
             return False
 
     def openresult(self):
-        if self.opensizing():
-            self.tickerbutton()
+        if self.num_analysis > 0:
+            self.opensizing()
         else:
-            self.tickerbutton()
-            print('Show Notification')
+            self.shownotification(resource_path('./Images/error.png'), "Get license!")
 
     def btnexit(self):
         self.setEnabled(False)
