@@ -375,13 +375,7 @@ class DesignClass(QWidget):
         return machine_number
 
     def tickerbutton(self):
-        currentIndex = self.right_widget.currentIndex()
-        # print('currentIndex: ', currentIndex)
-        if self.right_widget.currentIndex() == 0:
-            self.slide_label.hide()
-        else:
-            self.slide_label.move(0, 200 + 50 * (currentIndex - 1))
-            self.slide_label.show()
+        print("tickerbutton")
 
     # combobox
     def combobox_selection_changed(self):
@@ -589,7 +583,7 @@ class DesignClass(QWidget):
         label.move(320, 30)
 
         self.data_form_closedearthtubedesign = ["Earth Tube",
-                                                ["Heat Load", "W", "lineedit", "600"],
+                                                ["Heat Load", "W", "lineedit", "200"],
                                                 ["Ground Temp", "⁰C", 'lineedit', "15"],
                                                 ["Room Temp", "⁰C", 'lineedit', '25'],
                                                 ["Pipe Inner Diameter", "m", "lineedit", '0.19'],
@@ -623,7 +617,7 @@ class DesignClass(QWidget):
         label.move(320, 30)
 
         self.data_form_openearthtubedesign = ["Earth Tube",
-                                                ["Heat Load", "W", "lineedit", "600"],
+                                                ["Heat Load", "W", "lineedit", "200"],
                                                 ["Ground Temp", "⁰C", 'lineedit', "15"],
                                                 ["Room Temp", "⁰C", 'lineedit', '25'],
                                                 ["Input Air Temp", "⁰C", 'lineedit', '38'],
@@ -869,7 +863,7 @@ class DesignClass(QWidget):
             dict['Inlet Temperature'] = str(T_in)
             dict['Outlet Temperature'] = str(delta_T)
             dict['System Flow Rate'] = str(V)
-            self.dict['Results'] = dict
+            self.dict['closedResults'] = dict
 
             if self.num_analysis == '∞':
                 print('full license access')
@@ -893,8 +887,10 @@ class DesignClass(QWidget):
     def opensizing(self):
         # System
         try:
+            self.closedsizing()
             E_heat = float(self.dict['System']['Heat Load'])  # heat load [W]
             T_in = float(self.dict['System']['Input Air Temp'])  # Hot Fluid Temperature 60~65⁰C, 140~150⁰F
+            T_room = float(self.dict['System']['Room Temp'])
 
             # Air
             mu = 0.000018
@@ -915,6 +911,8 @@ class DesignClass(QWidget):
 
             # Pump
             V = float(self.dict['System']["Fan Velocity"])  # modify
+            E_heat = (T_in - T_room) * c_p * 3.14159 * (D_i/2) * (D_i/2) *V
+            print("additional heat", E_heat)
 
         except Exception as e:
             print('Exception: ', traceback.format_exc())
@@ -944,7 +942,8 @@ class DesignClass(QWidget):
 
             print(m_w, c_p, R_total, theta_w_in, theta_w_out)
             L = (m_w * c_p * R_total) * math.log(theta_w_in / theta_w_out)
-            L= L * 1.4
+            L= L * 1.8
+            L = L + float(self.dict['closedResults']['Pipe Length'])
             print("length of pipe:", L)
             print("output temperature", T_out)
 
@@ -953,7 +952,7 @@ class DesignClass(QWidget):
             dict['Inlet Temperature'] = str(T_in)
             dict['Outlet Temperature'] = str(delta_T)
             dict['System Flow Rate'] = str(V)
-            self.dict['Results'] = dict
+            self.dict['openResults'] = dict
 
             if self.num_analysis == '∞':
                 print('full license access')
