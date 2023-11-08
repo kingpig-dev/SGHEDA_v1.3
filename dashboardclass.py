@@ -4,7 +4,7 @@ import webbrowser
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap
-from buttonclass import MainButton
+from buttonclass import MainButton, TextButton
 from labelclass import IntroLabel1, IntroLabel2, IntroLabel4
 
 import os
@@ -34,13 +34,13 @@ class Dashboard(QWidget):
         logo_label.move(630, 200)
 
         # Add another button to the layout
-        website_button = MainButton(self)
-        website_button.setText(self.tr('Open Website'))
-        website_button.setToolTip("https://slinkyghxdesign.com")
+        website_button = TextButton(self)
+        website_button.setText(self.tr('https://slinkyghxdesign.com'))
+        # website_button.setToolTip("https://slinkyghxdesign.com")
         website_button.show()
         website_button.setCursor(Qt.DragLinkCursor)
         website_button.clicked.connect(self.redirect_to_website)
-        website_button.move(810, 600)
+        website_button.move(810, 620)
 
         # Add an introduction label
         intro_label_tile = IntroLabel1(self)
@@ -67,10 +67,16 @@ class Dashboard(QWidget):
 
         # Add a button to the layout
         design_button = MainButton(self)
-        design_button.setText('Open Program')
+        design_button.setText('Open SGHEDA')
         design_button.show()
-        design_button.move(200, 600)
+        design_button.move(100, 600)
         design_button.clicked.connect(self.designUI)
+
+        eahx_design_button = MainButton(self)
+        eahx_design_button.setText('Open EAHED')
+        eahx_design_button.show()
+        eahx_design_button.move(400, 600)
+        eahx_design_button.clicked.connect(self.eahx_designUI)
 
         copyright_label = IntroLabel4(self)
         copyright_label.setText('''
@@ -82,6 +88,9 @@ class Dashboard(QWidget):
 
     def designUI(self):
         self.parent.designUI()
+
+    def eahx_designUI(self):
+        self.parent.eahx_designUI()
 
     def analysisUI(self):
         self.parent.analysisUI()

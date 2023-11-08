@@ -45,9 +45,9 @@ def resource_path(relative_path):
 ########## Design Page ################
 #######################################
 
-class DesignClass(QWidget):
-    def __init__(self, path):
-        super().__init__()
+class EAHEDesignClass(QWidget):
+    def __init__(self, parent, path):
+        super().__init__(parent)
 
         ############ System Property ##############
         self.form_openearthtubedesign = None
@@ -61,6 +61,7 @@ class DesignClass(QWidget):
         self.pipeshowframe = None
         self.plotter = None
 
+        self.parent = parent
         self.num_design = 0
         self.num_analysis = 0
         self.program_version = "1.0"

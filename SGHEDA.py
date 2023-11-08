@@ -5,22 +5,32 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout, QLa
 
 from dashboardclass import Dashboard
 from designclass import DesignClass
+from EAHEdesignclass import EAHEDesignClass
 
-def app_specific_path():
+def app_specific_path_sgheda():
     appdata_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
     print("appdata_dir", appdata_dir)
     return appdata_dir + "/SGHEDA"
 
+def app_specific_path_eahx():
+    appdata_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
+    print("appdata_dir", appdata_dir)
+    return appdata_dir + "/EAHX"
+
 class Myapp(QMainWindow):
-    def __init__(self, path):
+    def __init__(self, path1, path2):
         super().__init__()
         # self.setFixedSize(1210, 790)
         self.resize(1210, 790)
         self.setStyleSheet("background-color: #1F2843;")
 
         # Create a DesignClass
-        self.design = DesignClass(self, path)
+        self.design = DesignClass(self, path1)
         self.design.move(1000, 1000)
+
+        # Create a EAGE class
+        self.eahxdesign = EAHEDesignClass(self, path2)
+        self.eahxdesign.move(1000, 1000)
 
         # Create a dashboard
         self.dashboard = Dashboard(self)
@@ -35,9 +45,16 @@ class Myapp(QMainWindow):
         self.design.move(0, 22)
         self.design.right_widget.setCurrentIndex(0)
 
+    def eahx_designUI(self):
+        print("eahx_designUI")
+        self.dashboard.move(1000, 1000)
+        self.eahxdesign.move(0, 22)
+        self.design.right_widget.setCurrentIndex(0)
+
     def dashboardUI(self):
         print("dashboardUI")
         self.design.move(1000, 1000)
+        self.eahxdesign.move(1000, 1000)
         self.dashboard.move(0, 0)
 
 class CustomTitleBar(QWidget):
@@ -110,11 +127,11 @@ class CustomTitleBar(QWidget):
 
 if __name__ == '__main__':
     # Create a new QApplication instance
-    appdata_dir = app_specific_path()
+    appdata_dir_sgheda = app_specific_path_sgheda()
+    appdata_dir_eahx = app_specific_path_eahx()
     app = QApplication(sys.argv)
-    print(appdata_dir)
     # Create a new MyApp instance
-    my_app = Myapp(appdata_dir)
+    my_app = Myapp(appdata_dir_sgheda, appdata_dir_eahx)
 
     titlebar = CustomTitleBar(my_app)
     # Show the main window
