@@ -544,6 +544,42 @@ class DesignClass(QWidget):
 
     def ui3(self):
         # Soil
+        main = QTabWidget()
+        main.tabBar().setObjectName('mainTab')
+
+        tab1 = self.ui4()
+        tab2 = self.ui5()
+
+        main.addTab(tab1, 'Closed Loop')
+        main.addTab(tab2, 'Open Loop')
+
+        main.setStyleSheet("""
+            QTabWidget::pane {
+                background-color: #f2f2f2;
+                padding: 0px;
+            }
+            QTabBar::tab {
+                background-color: #2F3B55;
+                color: #ffffff;
+                font-size: 20px;
+                padding: 8px;
+                width: 460px;
+                height: 30px;
+                border-radius: 5px;
+            }
+            QTabBar::tab:selected {
+                background-color: #1F2843;
+            }
+
+            QTabBar::tab:hover {
+                text-decoration: underline;
+            }
+        """)
+
+        return main
+
+    def ui4(self):
+        # Soil
         main = QWidget()
 
         label = IntroLabel1(main)
@@ -554,9 +590,41 @@ class DesignClass(QWidget):
                                                 ["Heat Load", "W", "lineedit", "600"],
                                                 ["Ground Temp", "⁰C", 'lineedit', "15"],
                                                 ["Input Air Temp", "⁰C", 'lineedit', '38'],
-                                                ["Output Air Temp", "⁰C", 'lineedit', '18'],
-                                                ["Pipe Inner Diameter", "m", "lineedit", '0.2'],
-                                                ["Pipe Outer Diameter", "m", "lineedit", '0.19'],
+                                                ["Pipe Inner Diameter", "m", "lineedit", '0.19'],
+                                                ["Pipe Outer Diameter", "m", "lineedit", '0.2'],
+                                                ["Pipe Material", ["Clay", "PEX", "PVC", "Steel"], "combobox"],
+                                                ["Buried Depth", "m", "lineedit", '2'],
+                                                ["Fan Velocity", "m/s", "lineedit", '1.5']
+                                                ]
+        self.form_earthtubedesign = InputForm(main, self.data_form_earthtubedesign, self)
+        self.form_earthtubedesign.move(232, 100)
+
+        btn_open = MainButton1(main)
+        btn_open.setText(main.tr('Calculate Earth tube'))
+        btn_open.move(310, 530)
+        btn_open.resize(300, 55)
+
+        def calculateearthtube():
+            self.dict['System'] = self.form_earthtubedesign.getData()
+            self.result()
+
+        btn_open.clicked.connect(calculateearthtube)
+        return main
+
+    def ui5(self):
+        # Soil
+        main = QWidget()
+
+        label = IntroLabel1(main)
+        label.setText(" Earth Tube Calculator ")
+        label.move(320, 30)
+
+        self.data_form_earthtubedesign = ["Earth Tube",
+                                                ["Heat Load", "W", "lineedit", "600"],
+                                                ["Ground Temp", "⁰C", 'lineedit', "15"],
+                                                ["Input Air Temp", "⁰C", 'lineedit', '38'],
+                                                ["Pipe Inner Diameter", "m", "lineedit", '0.19'],
+                                                ["Pipe Outer Diameter", "m", "lineedit", '0.2'],
                                                 ["Pipe Material", ["Clay", "PEX", "PVC", "Steel"], "combobox"],
                                                 ["Buried Depth", "m", "lineedit", '2'],
                                                 ["Fan Velocity", "m/s", "lineedit", '1.5']
@@ -674,14 +742,6 @@ class DesignClass(QWidget):
         except Exception as e:
             print("initial setSetting")
 
-    def movenext(self):
-        self.right_widget.setCurrentIndex(self.right_widget.currentIndex() + 1)
-        self.tickerbutton()
-
-    def moveprevious(self):
-        self.right_widget.setCurrentIndex(self.right_widget.currentIndex() - 1)
-        self.tickerbutton()
-
     def loaddata(self):
         print("loaddata")
         try:
@@ -794,7 +854,9 @@ class DesignClass(QWidget):
 
             print(m_w, c_p, R_total, theta_w_in, theta_w_out)
             L = (m_w * c_p * R_total) * math.log(theta_w_in / theta_w_out)
+            L= L * 1.4
             print("length of pipe:", L)
+            print("output temperature", T_out)
 
             dict = {}
             dict['Pipe Length'] = str(L + 2 * d)
