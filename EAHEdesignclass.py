@@ -50,6 +50,8 @@ class DesignClass(QWidget):
         super().__init__()
 
         ############ System Property ##############
+        self.form_openearthtubedesign = None
+        self.form_closedearthtubedesign = None
         self.data_form_earthtubedesign = None
         self.form_earthtubedesign = None
         self.systemearthtube = None
@@ -579,49 +581,51 @@ class DesignClass(QWidget):
         return main
 
     def ui4(self):
-        # Soil
+        # Closed loop
         main = QWidget()
 
         label = IntroLabel1(main)
         label.setText(" Earth Tube Calculator ")
         label.move(320, 30)
 
-        self.data_form_earthtubedesign = ["Earth Tube",
+        self.data_form_closedearthtubedesign = ["Earth Tube",
                                                 ["Heat Load", "W", "lineedit", "600"],
                                                 ["Ground Temp", "⁰C", 'lineedit', "15"],
-                                                ["Input Air Temp", "⁰C", 'lineedit', '38'],
+                                                ["Room Temp", "⁰C", 'lineedit', '25'],
                                                 ["Pipe Inner Diameter", "m", "lineedit", '0.19'],
                                                 ["Pipe Outer Diameter", "m", "lineedit", '0.2'],
                                                 ["Pipe Material", ["Clay", "PEX", "PVC", "Steel"], "combobox"],
                                                 ["Buried Depth", "m", "lineedit", '2'],
                                                 ["Fan Velocity", "m/s", "lineedit", '1.5']
                                                 ]
-        self.form_earthtubedesign = InputForm(main, self.data_form_earthtubedesign, self)
-        self.form_earthtubedesign.move(232, 100)
+        self.form_closedearthtubedesign = InputForm(main, self.data_form_closedearthtubedesign, self)
+        self.form_closedearthtubedesign.move(242, 100)
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate Earth tube'))
-        btn_open.move(310, 530)
+        btn_open.move(320, 530)
         btn_open.resize(300, 55)
 
         def calculateearthtube():
-            self.dict['System'] = self.form_earthtubedesign.getData()
-            self.result()
+            self.dict['System'] = self.form_closedearthtubedesign.getData()
+            print('closed loop', self.dict['System'])
+            self.closedresult()
 
         btn_open.clicked.connect(calculateearthtube)
         return main
 
     def ui5(self):
-        # Soil
+        # Open Loop
         main = QWidget()
 
         label = IntroLabel1(main)
         label.setText(" Earth Tube Calculator ")
         label.move(320, 30)
 
-        self.data_form_earthtubedesign = ["Earth Tube",
+        self.data_form_openearthtubedesign = ["Earth Tube",
                                                 ["Heat Load", "W", "lineedit", "600"],
                                                 ["Ground Temp", "⁰C", 'lineedit', "15"],
+                                                ["Room Temp", "⁰C", 'lineedit', '25'],
                                                 ["Input Air Temp", "⁰C", 'lineedit', '38'],
                                                 ["Pipe Inner Diameter", "m", "lineedit", '0.19'],
                                                 ["Pipe Outer Diameter", "m", "lineedit", '0.2'],
@@ -629,17 +633,18 @@ class DesignClass(QWidget):
                                                 ["Buried Depth", "m", "lineedit", '2'],
                                                 ["Fan Velocity", "m/s", "lineedit", '1.5']
                                                 ]
-        self.form_earthtubedesign = InputForm(main, self.data_form_earthtubedesign, self)
-        self.form_earthtubedesign.move(232, 100)
+        self.form_openearthtubedesign = InputForm(main, self.data_form_openearthtubedesign, self)
+        self.form_openearthtubedesign.move(242, 100)
 
         btn_open = MainButton1(main)
         btn_open.setText(main.tr('Calculate Earth tube'))
-        btn_open.move(310, 530)
+        btn_open.move(320, 530)
         btn_open.resize(300, 55)
 
         def calculateearthtube():
-            self.dict['System'] = self.form_earthtubedesign.getData()
-            self.result()
+            self.dict['System'] = self.form_openearthtubedesign.getData()
+            print('open loop', self.dict['System'])
+            self.openresult()
 
         btn_open.clicked.connect(calculateearthtube)
         return main
@@ -800,7 +805,92 @@ class DesignClass(QWidget):
     def exitbutton(self):
         self.parent.exit()
 
-    def sizing(self):
+    def closedsizing(self):
+        # System
+        try:
+            E_heat = float(self.dict['System']['Heat Load'])  # heat load [W]
+            print(self.dict['System'])
+            T_in = float(self.dict['System']['Room Temp'])  # Hot Fluid Temperature 60~65⁰C, 140~150⁰F
+
+            # Air
+            mu = 0.000018
+            c_p = 718
+            rho = 1.225
+
+            # Soil
+            k_soil = 2.07
+            T_g = float(self.dict['System']["Ground Temp"])
+
+            # print(E_heat, T_in, mu, c_p, rho, k_soil, T_g)
+
+            # Pipe
+            D_i = float(self.dict['System']['Pipe Inner Diameter'])
+            D_o = float(self.dict['System']['Pipe Outer Diameter'])
+            k_pipe = self.pipeconductivitytuple[self.dict['System']['Pipe Material']]
+            d = float(self.dict['System']['Buried Depth'])
+
+            # Pump
+            V = float(self.dict['System']["Fan Velocity"])  # modify
+
+        except Exception as e:
+            print('Exception: ', traceback.format_exc())
+            self.shownotification(resource_path("./Images/warning.png"), "Didn't input all variables.")
+            return False
+        try:
+            # Resistance
+            R_e = rho * V * D_i / mu  # Reynolds number    Re<2100 laminar regime; 2100<Re<10000: transitional regime;
+            # Re>10000 turbulent regime
+            P_r = mu * c_p / k_pipe  # Prandtl number
+            h_w = 0.023 * R_e ** 0.8 * P_r ** 0.3 * k_pipe / D_i  # heat transfer coefficient [W/(m^2*k)]
+
+            R_conv = 1 / (3.14159 * D_i * h_w)
+            R_pipe = math.log(D_o / D_i) / (2 * 3.14159 * k_pipe)
+            S = 2 * 3.14159 / math.log((2 * d / D_o) + math.sqrt((2 * d / D_o) ** 2 - 1))  # conduction shape factor of
+            # the pipe
+            R_soil = 1 / (S * k_soil)
+
+            R_total = R_conv + R_pipe + R_soil
+
+            # Length calculation
+            m_w = rho * V * 3.14159 * (D_i / 2) ** 2
+            T_out = T_in - E_heat / (m_w * c_p)
+            delta_T = T_in - T_out
+            theta_w_in = T_in - T_g
+            theta_w_out = T_out - T_g
+
+            print(m_w, c_p, R_total, theta_w_in, theta_w_out)
+            L = (m_w * c_p * R_total) * math.log(theta_w_in / theta_w_out)
+            L= L * 1.8
+            print("length of pipe:", L)
+            print("output temperature", T_out)
+
+            dict = {}
+            dict['Pipe Length'] = str(L + 2 * d)
+            dict['Inlet Temperature'] = str(T_in)
+            dict['Outlet Temperature'] = str(delta_T)
+            dict['System Flow Rate'] = str(V)
+            self.dict['Results'] = dict
+
+            if self.num_analysis == '∞':
+                print('full license access')
+            else:
+                self.num_design -= 1
+                self.database_set_data()
+                self.combobox_selection_changed()
+            return True
+        except Exception as e:
+            print('Size Calculation Error:', traceback.format_exc())
+            self.shownotification(resource_path("./Images/error.png"), "Calculation Error!!")
+            return False
+
+    def closedresult(self):
+        if self.closedsizing():
+            self.tickerbutton()
+        else:
+            self.tickerbutton()
+            print('Show Notification')
+
+    def opensizing(self):
         # System
         try:
             E_heat = float(self.dict['System']['Heat Load'])  # heat load [W]
@@ -877,154 +967,12 @@ class DesignClass(QWidget):
             self.shownotification(resource_path("./Images/error.png"), "Calculation Error!!")
             return False
 
-    def result(self):
-        if self.sizing():
+    def openresult(self):
+        if self.opensizing():
             self.tickerbutton()
         else:
             self.tickerbutton()
             print('Show Notification')
-
-    def analysis(self):
-        self.tp_series = []
-        self.tp_series_0 = []
-        self.tp_series_05 = []
-        self.tp_series_1 = []
-        self.tp_series_2 = []
-        self.tp_series_4 = []
-        self.t_series = []
-
-        print('Analysis')
-        N_ring = round(float(self.dict["Results"]['Number of Ring']) / 10)
-        R = float(self.dict["Results"]['Ring Diameter'])  # m
-        pitch = float(self.dict['Results']['Pitch'])  # m
-
-        # alpha = 1e-6  # m2/s
-
-        end_time = 0
-        if self.value_time_setting["Prediction Time"] == '10 days':
-            end_time = 1
-        elif self.value_time_setting["Prediction Time"] == '20 days':
-            end_time = 2
-        elif self.value_time_setting["Prediction Time"] == '1 month':
-            end_time = 3
-        elif self.value_time_setting["Prediction Time"] == '2 month':
-            end_time = 6
-        elif self.value_time_setting["Prediction Time"] == '6 month':
-            end_time = 18
-
-        print("end time: ", end_time)
-        self.t_series = np.arange(0.01, end_time, 0.05)  # consider alpha
-        h = float(self.dict['Pipe']['Buried Depth'])  # m
-
-        def sqrt_float16(x):
-            return np.sqrt(x).astype(np.float16)
-
-        def erfc_float16(x):
-            return erfc(x).astype(np.float16)
-
-        def cos_float16(x):
-            return np.cos(x).astype(np.float16)
-
-        def sin_float16(x):
-            return np.sin(x).astype(np.float16)
-
-        def quadself(f, a, b, c, d, nx, ny):
-            # Function to approximate the double integral
-            dx: np.float16 = (b - a) / nx
-            dy: np.float16 = (d - c) / ny
-
-            integral_sum: np.float16 = 0.0
-
-            for i in range(nx):
-                x = a + (i + 0.5) * dx
-
-                for j in range(ny):
-                    y = c + (j + 0.5) * dy
-                    integral_sum += f(x, y)
-
-            integral_sum *= dx * dy
-
-            return integral_sum
-
-        start_time = time.time()
-
-        # gs_series = []
-        # for N_ring in N_ring_series:
-        try:
-            gs_series = []
-            for t in self.t_series:
-                gs = 0
-                for i in range(1, N_ring + 1):
-                    for j in range(1, N_ring + 1):
-                        if self.analysis_calculation_process:
-                            if i != j:
-                                def d(w: np.float16, phi: np.float16):
-                                    return sqrt_float16(
-                                        (pitch * (i - j) + R * (cos_float16(phi) - cos_float16(w))) ** 2 +
-                                        (R * (sin_float16(phi) - sin_float16(w))) ** 2)
-
-                                def fun(w: np.float16, phi: np.float16):
-                                    return erfc_float16(d(w, phi) / (2 * sqrt_float16(t))) / d(w, phi) - erfc_float16(
-                                        sqrt_float16(d(w, phi) ** 2 + 4 * h ** 2) / (
-                                                2 * sqrt_float16(t))) / sqrt_float16(
-                                        d(w, phi) ** 2 + 4 * h ** 2)
-
-                                # b, _ = dblquad(fun, 0, 2 * np.pi, lambda phi: 0, lambda phi: 2 * np.pi,
-                                # epsabs=1e-2, epsrel=1e-2)
-                                b = quadself(fun, 0, 2 * np.pi, 0, 2 * np.pi, 20, 20)
-                                gs += np.float16(b)
-                        else:
-                            return False
-                print(f"gs: {gs}")
-                gs_series.append(gs / N_ring)
-
-            self.plt_gfunction.clear()
-            self.plt_gfunction.plot(self.t_series * 11.57, gs_series, pen='b')  # 1e6/(3600*24)=11.57
-
-            conductivity = float(self.dict['Soil']['Thermal Conductivity'])
-            heatload = float(self.dict['System']['Heat Load']) / pitch
-
-            for a in gs_series:
-                self.tp_series.append(-a * heatload / (2 * np.pi * conductivity * 1e5) * 3)
-            for i in range(0, len(self.tp_series)):
-                self.tp_series_0.append(self.tp_series[i] * erfc(0.01 / np.sqrt(self.t_series[i])))
-                self.tp_series_05.append(self.tp_series[i] * erfc(0.5 / np.sqrt(self.t_series[i])))
-                self.tp_series_1.append(self.tp_series[i] * erfc(1 / np.sqrt(self.t_series[i])))
-                self.tp_series_2.append(self.tp_series[i] * erfc(2 / np.sqrt(self.t_series[i])))
-                self.tp_series_4.append(self.tp_series[i] * erfc(4 / np.sqrt(self.t_series[i])))
-
-            self.show_analysis_graph()
-
-            end_time = time.time()
-            elapsed_time = end_time - start_time
-            print("Elapsed time: {:.2f}".format(elapsed_time))
-            self.dict["Analysis"] = {"Elapsed time": str(elapsed_time)}
-            self.analysis_elapsed_time.setText("Elapsed time: {:.2f}s".format(elapsed_time))
-            return True
-        except Exception as e:
-            print("analysis calculation error: ", e)
-            self.shownotification(resource_path("./Image/error.png"), "Can't calculate analysis")
-            return False
-
-    def show_analysis_graph(self):
-        self.plt_temperaturepertubation.clear()
-        plot_item = self.plt_temperaturepertubation.getPlotItem()
-
-        curve0 = plot_item.plot(self.t_series * 11.57, self.tp_series_0, pen='b', name='0.01m')
-        curve1 = plot_item.plot(self.t_series * 11.57, self.tp_series_05, pen='r', name='0.5m')
-        curve2 = plot_item.plot(self.t_series * 11.57, self.tp_series_1, pen='w', name='1m')
-        curve3 = plot_item.plot(self.t_series * 11.57, self.tp_series_2, pen='y', name='2m')
-        curve4 = plot_item.plot(self.t_series * 11.57, self.tp_series_4, pen='g', name='4m')
-
-        legend = pg.LegendItem()
-        legend.setParentItem(plot_item)
-
-        legend.addItem(curve0, '0.01m')
-        legend.addItem(curve1, '0.5m')
-        legend.addItem(curve2, '1m')
-        legend.addItem(curve3, '2m')
-        legend.addItem(curve4, '4m')
-        legend.anchor((0, 0), (0.2, 0.95))
 
     def btnexit(self):
         self.setEnabled(False)
@@ -1037,7 +985,6 @@ class DesignClass(QWidget):
 
         elif result == QMessageBox.Yes:
             sys.exit()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
